@@ -33,3 +33,14 @@ You can modify the following configuration settings in the `appsettings.json` fi
 
 - Database connection string: Set the connection string for the database.
 
+## Usage instructions 
+
+- From the home screen click on 'Start Quizz' to navigate to the Questions page, where questions are listed.
+- When the user clicks on an answer it expands and the answers are listed.
+- User select an answer, then the incorrect ones change to red font, and the correct to green.
+- The user can select an answer once for each question.
+- Bellow the list of questions, there is a button to fetch the next 10 questions.
+- Each set can be filtered by category, difficulty or question text :
+	On the top of the page the user may fill those fields and click 'Filter' button. 
+	When fetching the next question set no filters are applied. 
+- The 'Home' button re-starts the quiz, by deleting all saved to local DB questions, and populating -under a new session- questions from Open Trivia API.
