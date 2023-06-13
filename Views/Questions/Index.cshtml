@@ -1,0 +1,164 @@
+﻿@model IEnumerable<TriviaQuiz_WebApp.Models.Question>
+
+@{
+    ViewData["Title"] = "Trivia Quiz";
+}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<style>
+    .hiddenRow {
+        padding: 0 !important;
+    }
+
+</style>
+
+
+
+<form id="filterForm" method="get" action="@Url.Action("Index", "Questions")">
+    <div>
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="">All</option>
+            @foreach (var item in Model)
+            {
+                <option value="@item.Category">@item.Category</option>
+            }
+        </select>
+    
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty" name="difficulty">
+            <option value="">All</option>
+            @foreach (var item in Model)
+            {
+                <option value="@item.Difficulty">@item.Difficulty</option>
+            }
+        </select>
+    
+        <label for="questionTerm">Question:</label>
+        <input type="text" id="questionTerm" name="questionTerm" />
+    
+        <input type="submit" value="Filter" />
+    </div>
+
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Difficulty)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 0;
+        }
+        @foreach (var item in Model)
+        {
+
+
+            <tr data-toggle="collapse" data-target="#demo_@i" class="accordion-toggle">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuestionText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Difficulty)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6" class="hiddenRow">
+                    <div class="accordian-body collapse" id="demo_@i">
+                        <table>
+                            <thead></thead>
+                            <tbody>
+                                @foreach (var answer in item.Answers)
+                                {
+                                    <tr class="@(answer.IsCorrect ? "correct-answer" : "wrong-answer")">
+                                        <td><input type="radio" name="answer_@i" onclick="disableOtherRadiosAndShowRes(this)"></td>
+                                        <td id="answerText" class="answer">@Html.DisplayFor(modelItem => answer.AnswerText)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>
+</form>
+<div>
+   @* @Html.ActionLink("Fetch Next set", "Index", "Questions", new { pageNumber = ViewBag.CurrentPage + 1, 
+                                                                   category = Context.Request.Query["category"],
+                                                                   difficulty = Context.Request.Query["difficulty"],
+                                                                   questionTerm = Context.Request.Query["questionTerm"] }, null)*@
+
+    @Html.ActionLink("Fetch Next set", "Index", "Questions", new { pageNumber = ViewBag.CurrentPage + 1})
+</div>
+
+
+ <script>
+    function disableOtherRadiosAndShowRes(radio) {
+        
+        var row = radio.closest('tr');
+        row.classList.add('selected-answer');
+
+        row = radio.closest('tbody');
+        var radios = row.querySelectorAll("input[type=radio]");
+        var td = radio.closest('tr').querySelector('#answerText');
+
+        var wRows = row.querySelectorAll('tr.wrong-answer');
+        wRows.forEach(function (wRow) {
+            wRow.classList.add('wrong-answer-results');
+        });
+
+        var cRows = row.querySelectorAll('tr.correct-answer');
+        cRows.forEach(function (cRow) {
+            cRow.classList.add('correct-answer-results');
+        });
+
+       
+        for (var i = 0, len = radios.length; i < len; i++) {
+            radios[i].disabled = true;
+        }
+    }
+</script>
+
+
+
+@* <script>
+        document.getElementById("filterForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            var category = document.getElementById("category").value;
+            var difficulty = document.getElementById("difficulty").value;
+            var questionTerm = document.getElementById("questionTerm").value;
+
+            // Construct the URL with the form values
+            var url = "@Url.Action("Index", "Questions")" + "?category=" + category + "&difficulty=" + difficulty + "&questionTerm=" + questionTerm;
+
+            // Redirect to the desired action
+            window.location.href = url;
+        });
+
+    // Update the Next Page link URL with the form values
+    var nextPageLink = document.getElementById("nextPageLink");
+    
+   
+</script>*@
+

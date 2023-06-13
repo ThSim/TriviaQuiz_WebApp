@@ -1,0 +1,37 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+
+.selected-answer {
+    font-weight: bold;
+}
+
+.wrong-answer-results {
+    color: darkred;
+}
+
+.correct-answer-results {
+    color: forestgreen;
+}
+
+#questionTerm,
+#difficulty,
+#category {
+    margin-right: 15px;
+}
